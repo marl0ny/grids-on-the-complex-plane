@@ -14,6 +14,8 @@ or select a new function in the `Preset f(z)` dropdown menu. Note that the funct
 becomes a parameter that you can vary using the sliders. To view the initial input of the function
 press `Toggle grid input`. To change the input of the function click on `Set grid input..` and then change the input from here.
 
+For a more text based approach to plotting complex functions in a grid format, use the classes and functions defined in `complex_mappers.py`. Refer to the notebook `complex_mappers.ipynb` for some examples.
+
 This program is inspired by and based upon the 3Blue1Brown video on the [Riemann zeta function](https://www.youtube.com/watch?v=sD0NjbwqlYw) (and complex functions in general),
 as well as [Complex Mapping Viewer](https://www.falstad.com/complexviewer/) by Keith Orpen, Djun Kim, Kent Pearce, and Paul Falstad.
 A relatively fast and easy method to compute the analytic continuation of the Riemann zeta function is given by [this StackExchange answer](https://math.stackexchange.com/a/3274)
