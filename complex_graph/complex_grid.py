@@ -2,6 +2,12 @@ import numpy as np
 from typing import Tuple, List, Callable, Any
 
 
+if not hasattr(np, "flip"):
+    def flip(array: np.ndarray, axes: int) -> None:
+        return array[::-1]
+    np.flip = flip
+
+
 def _horizontal_grid_array(grid_origin: Tuple[float, float],
                            grid_dimensions: Tuple[float, float],
                            n_points_per_line: int,

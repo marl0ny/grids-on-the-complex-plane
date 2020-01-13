@@ -6,7 +6,6 @@ TODO:
 -Add sliders to the modify grid
 -Decrease the computational time of the zeta and eta functions
 -Look at better ways to toggle blitting.
--Need to improve moving the plots by mouse
 
 ISSUES:
 -The logarithmic function looks wrong.
@@ -93,7 +92,8 @@ class App(ComplexAnimator):
             "gaussian": "a*exp(-z**2/(2*(sigma)**2))/2",
             "sinc": "a*sinc(w*(6.5)*z)/2",
             "inverse z": "w/(z - a)",
-            "zeta": "zeta(k*(z - w))"
+            "zeta": "zeta(k*(z - w))",
+            "inverse z squared": "1/(w*(z-a))**2"
             }
         self.function_dropdown_string = tk.StringVar(self.window)
         self.function_dropdown_string.set("Preset f(z)")
@@ -135,6 +135,7 @@ class App(ComplexAnimator):
         # self.window.bind("<ButtonRelease-3>", self.popup_menu)
 
         self.canvas.get_tk_widget().bind_all("<MouseWheel>", self.zoom)
+        self.canvas.get_tk_widget().bind_all("<Button-1>", self.left_button_pressed)
         self.canvas.get_tk_widget().bind_all("<Button-4>", self.zoom)
         self.canvas.get_tk_widget().bind_all("<Button-5>", self.zoom)
         self._prev_mouse_position = []
@@ -249,6 +250,35 @@ class App(ComplexAnimator):
             k += 1
         self._set_widgets_after_param_sliders(2*k+5)
 
+    def _mouse_coordinates_transform(self, 
+                                     x: int, y: int) -> tuple:
+        """
+        Transform the location of the mouse as expressed in terms
+        of the coordinates of the GUI window into the coordinates
+        of the plot.
+        """
+        ax = self.figure.get_axes()[0]
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        pixel_xlim = [ax.bbox.xmin, ax.bbox.xmax]
+        pixel_ylim = [ax.bbox.ymin, ax.bbox.ymax]
+        height = self.figure.bbox.ymax
+        mx = (xlim[1] - xlim[0])/(pixel_xlim[1] - pixel_xlim[0])
+        my = (ylim[1] - ylim[0])/(pixel_ylim[1] - pixel_ylim[0])
+        x = (x - pixel_xlim[0])*mx + xlim[0]
+        y = (height - y - pixel_ylim[0])*my + ylim[0]
+        return x, y
+
+    def left_button_pressed(self, event) -> None:
+        """
+        The left button is pressed.
+        """
+        x = event.x
+        y = event.y
+        x, y = self._mouse_coordinates_transform(x, y)
+        self._prev_mouse_position[0] = x
+        self._prev_mouse_position[1] = y
+
     def mouse_movement(self, event) -> None:
         """
         Respond to mouse movement on the canvas.
@@ -256,16 +286,12 @@ class App(ComplexAnimator):
         self.canvas.get_tk_widget().focus()
         x = event.x
         y = event.y
+        x, y = self._mouse_coordinates_transform(x, y)
         if self._prev_mouse_position != []:
             x_prev, y_prev = self._prev_mouse_position
-            distance = sqrt((x - x_prev)**2 + (y - y_prev)**2)
-            if distance < 1e-30:
-                return
-            dx = (x - x_prev)/distance
-            dy = (y - y_prev)/distance
-            self.move_axes(-dx/25.0, dy/25.0)
-            self._prev_mouse_position[0] = x
-            self._prev_mouse_position[1] = y
+            dx = x - x_prev
+            dy = y - y_prev
+            self.move_axes(-dx, -dy)
         else:
             self._prev_mouse_position.extend([x, y])
 

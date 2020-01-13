@@ -95,7 +95,8 @@ class ComplexAnimator(Animator):
         """
         self.t += delta_t
         if self._PRINT_FPS:
-            pass
+            print('\033[2J')
+            print("%.1f fps" % (1/delta_t))
         if self._has_changed:
             try:
                 update_complex_grid(self._plots, self._grid, self.f)
@@ -157,23 +158,19 @@ class ComplexAnimator(Animator):
 
     def move_axes(self, move_by_x: float, move_by_y: float) -> None:
         """
-        Translate the x and y axes. Please note, the move_by_x and
-        move_by_y parameters are not the actual x and y values, but
-        are instead ratios to the ranges of the x and y axes.
+        Translate the x and y axes.
 
         move_by_x [float]: translation value for the x axis.
         move_by_y [float]: translation value for the y axis.
         """
-        axes = self.figure.get_axes()
-        xlim = axes[0].get_xlim()
-        ylim = axes[0].get_ylim()
-        dx = xlim[1] - xlim[0]
-        dy = ylim[1] - ylim[0]
-        xlim = [xlim[0] + dx*move_by_x,
-                xlim[1] + dx*move_by_x]
-        ylim = [ylim[0] + dy*move_by_y,
-                ylim[1] + dy*move_by_y]
+        ax = self.figure.get_axes()[0]
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        xlim = [xlim[0] + move_by_x,
+                xlim[1] + move_by_x]
+        ylim = [ylim[0] + move_by_y,
+                ylim[1] + move_by_y]
         self.toggle_blit()
-        axes[0].set_xlim(xlim)
-        axes[0].set_ylim(ylim)
+        ax.set_xlim(xlim)
+        ax.set_ylim(ylim)
         self.toggle_blit()
