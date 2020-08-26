@@ -172,6 +172,16 @@ class FunctionZtoZ:
                 float(multiplies_var(self.symbols[0], s, self._symbolic_func))
                 for s in self.parameters}
 
+    def get_enumerated_default_values(self) -> dict:
+        """
+        Get an enumerated dict of the suggested default values for each parameter
+        used in this function.
+        """
+        return {i: [s, 
+                float(multiplies_var(
+                      self.symbols[0], s, self._symbolic_func))]
+                for i, s in enumerate(self.parameters)}
+
     def derivative(self) -> None:
         """
         Mutate this function into its derivative.

@@ -1,8 +1,8 @@
 # Plotting in the Complex Plane
 
 Interactively plot complex functions in real time! To use this program
-first ensure that you have Python with Numpy, Scipy, Sympy, Matplotlib, Tkinter, and optionally
-Numba. Then download or clone this repository and run `tkapp.py` to launch the program.
+first ensure that you have Python with at least [Numpy](https://numpy.org), [Scipy](https://www.scipy.org/), [Sympy](https://www.sympy.org/en/index.html), [Matplotlib](https://matplotlib.org), and [Tkinter](https://docs.python.org/3/library/tk.html).
+You may also optionally install [Numba](http://numba.pydata.org/) for improved performance or [PySide2](https://wiki.qt.io/Qt_for_PythonPySide2) if you want to use PySide2 for the GUI instead and Tkinter. Then download or clone this repository and run either `tkapp.py` to launch the Tkinter version of this program, or `qtapp.py` for the PySide2 version.
 
 ## Usage
 
