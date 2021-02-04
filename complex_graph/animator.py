@@ -52,6 +52,13 @@ class Animator:
         self._delta_t = 1.0/60.0
         self._t = perf_counter()
 
+        version_tokens = matplotlib.__version__.split('.')
+        base = 100.0
+        self._version_number = 0
+        for n in version_tokens:
+            self._version_number += int(n)*base
+            base /= 10.0
+
     def add_plot(self, plot: plt.Artist) -> None:
         """
         Add a list of plot objects so that they can be animated.
@@ -122,9 +129,14 @@ class Animator:
         # that uses blitting and does not access the
         # protected members of the Animation class.
         if self.main_animation._blit:
-            self.main_animation._blit_clear(
-                self.main_animation._drawn_artists, 
-                self.main_animation._blit_cache)
+            if self._version_number < 330.0:
+                self.main_animation._blit_clear(
+                    self.main_animation._drawn_artists, 
+                    self.main_animation._blit_cache)
+            else:
+                self.main_animation._blit_clear(
+                    self.main_animation._drawn_artists
+                )
             self.main_animation._blit = False
         else:
             # self.main_animation._init_draw()
